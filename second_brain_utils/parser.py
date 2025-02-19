@@ -9,6 +9,7 @@ import yaml
 PROPERTY_SECTION_DELIMITER = "---\n"
 
 DT_FORMAT = "%Y-%m-%dT%H:%M:%S"
+ALTERNATE_DT_FORMAT = "%Y-%m-%d %H:%M"
 
 with open(os.getenv("SECOND_BRAIN_UTILS_PARSER_CONF", "config/example.yaml")) as config_file:
     config = yaml.safe_load(config_file)
@@ -35,7 +36,10 @@ def parse_note(source_path: str) -> dict[str, dict[str, str | list[str]] | list[
 
     # Ensure datetimes are loaded as such
     if (modification_date := property_dict.get("modifié")) and isinstance(modification_date, str):
-        property_dict["modifié"] = datetime.strptime(property_dict["modifié"], DT_FORMAT)
+        try:
+            property_dict["modifié"] = datetime.strptime(property_dict["modifié"], DT_FORMAT)
+        except ValueError:
+            property_dict["modifié"] = datetime.strptime(property_dict["modifié"], ALTERNATE_DT_FORMAT)
 
     return {"filename": os.path.basename(source_path), "properties": property_dict, "content": content_lines}
 
