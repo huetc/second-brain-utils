@@ -1,16 +1,19 @@
 import glob
+import os
 import os.path
 from datetime import datetime
 
 import yaml
 
-SOURCE_DIRECTORY = "../second-brain/second-brain-raw"
-# SOURCE_DIRECTORY = "./tmp"
-
 PROPERTY_SECTION_DELIMITER = "---\n"
 
-REF_DATE = datetime(2025, 2, 18, 0)
 DT_FORMAT = "%Y-%m-%dT%H:%M:%S"
+
+with open(os.getenv("SECOND_BRAIN_UTILS_PARSER_CONF", "config/example.yaml")) as config_file:
+    config = yaml.safe_load(config_file)
+
+source_directory = config["source_path"]
+ref_dt = datetime.strptime(config["ref_dt"], DT_FORMAT)
 
 
 def parse_note(source_path: str) -> dict[str, dict[str, str | list[str]] | list[str]]:
@@ -36,10 +39,10 @@ def parse_note(source_path: str) -> dict[str, dict[str, str | list[str]] | list[
 
 
 # Retrieve all notes in the source directory
-source_note_paths = glob.glob(os.path.join(SOURCE_DIRECTORY, "*.md"))
+source_note_paths = glob.glob(os.path.join(source_directory, "*.md"))
 
 recent_notes = [
-    parse_note(path) for path in source_note_paths if datetime.fromtimestamp(os.path.getmtime(path)) > REF_DATE
+    parse_note(path) for path in source_note_paths if datetime.fromtimestamp(os.path.getmtime(path)) > ref_dt
 ]
 
 
@@ -50,7 +53,3 @@ recent_notes_by_branch = {}
 
 for branch in all_branches:
     recent_notes_by_branch[branch] = [note for note in recent_notes if branch in note["properties"].get("branches")]
-
-print({branch: len(notes) for branch, notes in recent_notes_by_branch.items()})
-
-print(recent_notes_by_branch)
