@@ -2,6 +2,7 @@ import glob
 import os
 import os.path
 from datetime import datetime
+from pathlib import Path
 
 import yaml
 
@@ -14,6 +15,7 @@ with open(os.getenv("SECOND_BRAIN_UTILS_PARSER_CONF", "config/example.yaml")) as
 
 source_directory = config["source_path"]
 ref_dt = datetime.strptime(config["ref_dt"], DT_FORMAT)
+target_dispatch_dir = config["dispatch_directory_path"]
 
 
 def parse_note(source_path: str) -> dict[str, dict[str, str | list[str]] | list[str]]:
@@ -35,7 +37,7 @@ def parse_note(source_path: str) -> dict[str, dict[str, str | list[str]] | list[
     if (modification_date := property_dict.get("modifié")) and isinstance(modification_date, str):
         property_dict["modifié"] = datetime.strptime(property_dict["modifié"], DT_FORMAT)
 
-    return {"properties": property_dict, "content": content_lines}
+    return {"filename": os.path.basename(source_path), "properties": property_dict, "content": content_lines}
 
 
 # Retrieve all notes in the source directory
@@ -53,3 +55,20 @@ recent_notes_by_branch = {}
 
 for branch in all_branches:
     recent_notes_by_branch[branch] = [note for note in recent_notes if branch in note["properties"].get("branches")]
+
+# Create the target directory if it does not exist
+Path(target_dispatch_dir).mkdir(parents=True, exist_ok=True)
+
+# Dispatch and transfer the notes in the branch directories
+for branch, notes in recent_notes_by_branch.items():
+    # Create the branch directory
+    Path(os.path.join(target_dispatch_dir, branch)).mkdir(parents=True, exist_ok=True)
+
+    # Dump all notes associated to this branch
+    for note in notes:
+        with open(os.path.join(target_dispatch_dir, branch, note["filename"]), mode="w") as note_file:
+            # Dumping the properties first, correctly delimited
+            note_file.write(PROPERTY_SECTION_DELIMITER)
+            yaml.dump(data=note["properties"], stream=note_file, sort_keys=False, indent=2, allow_unicode=True)
+            note_file.write(PROPERTY_SECTION_DELIMITER)
+            note_file.writelines(note["content"])
