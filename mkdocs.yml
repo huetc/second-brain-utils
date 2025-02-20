@@ -5,7 +5,7 @@ site_description: This is a template repository for Python projects that use uv 
 site_author: Christophe Huet
 edit_uri: edit/main/docs/
 repo_name: huetc/second-brain-utils
-copyright: Maintained by <a href="https://huetc.com">huetc</a>.
+copyright: Maintained by <a href="https://github.com/huetc">huetc</a>.
 
 nav:
   - Home: index.md

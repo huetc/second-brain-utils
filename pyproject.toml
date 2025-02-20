@@ -5,23 +5,20 @@ description = "This is a template repository for Python projects that use uv for
 authors = [{ name = "Christophe Huet", email = "christophe.huet.pro@proton.me" }]
 readme = "README.md"
 keywords = ['python']
-requires-python = ">=3.9,<4.0"
+requires-python = ">=3.12,<4.0"
 classifiers = [
     "Intended Audience :: Developers",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
 [project.urls]
-Homepage = "https://huetc.github.io/second-brain-utils/"
+#Homepage = "https://huetc.github.io/second-brain-utils/"
 Repository = "https://github.com/huetc/second-brain-utils"
-Documentation = "https://huetc.github.io/second-brain-utils/"
+#Documentation = "https://huetc.github.io/second-brain-utils/"
 
 [dependency-groups]
 dev = [

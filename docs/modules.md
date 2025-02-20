@@ -1,1 +1,1 @@
-::: second_brain_utils.foo
+::: second_brain_utils.parser
