@@ -1,21 +1,19 @@
-import os
-from datetime import datetime
+import sys
 
-import yaml
-
+from second_brain_utils.config import JobConfig
 from second_brain_utils.dispatcher import dispatch_notes_by_branch, split_notes_by_branch
 from second_brain_utils.parser import retrieve_source_notes
 
-DT_FORMAT = "%Y-%m-%dT%H:%M:%S"
-
 
 def main():
-    with open(os.getenv("SECOND_BRAIN_UTILS_PARSER_CONF", "config/example.yaml")) as config_file:
-        config = yaml.safe_load(config_file)
+    config = JobConfig()
+    print(config)
 
-    source_directory = config["source_path"]
-    ref_dt = datetime.strptime(config["ref_dt"], DT_FORMAT)
-    target_dispatch_dir = config["dispatch_directory_path"]
+    source_directory = config.source_directory
+    if not config.ref_dt:
+        sys.exit("ref_dt setting was not found but is required for the dispatch command.")
+    ref_dt = config.ref_dt
+    target_dispatch_dir = config.target_directory
 
     # Parse and retrieve all source notes
     recent_notes = retrieve_source_notes(source_directory=source_directory, ref_dt=ref_dt)

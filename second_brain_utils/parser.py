@@ -36,8 +36,12 @@ def parse_note(source_path: str) -> dict[str, dict[str, str | list[str]] | list[
     return {"filename": os.path.basename(source_path), "properties": property_dict, "content": content_lines}
 
 
-def retrieve_source_notes(source_directory: str, ref_dt: datetime) -> list:
+def retrieve_source_notes(source_directory: str, ref_dt: datetime | None = None) -> list:
     # Retrieve all notes in the source directory
     source_note_paths = glob.glob(os.path.join(source_directory, "*.md"))
 
-    return [parse_note(path) for path in source_note_paths if datetime.fromtimestamp(os.path.getmtime(path)) > ref_dt]
+    return (
+        [parse_note(path) for path in source_note_paths if datetime.fromtimestamp(os.path.getmtime(path)) > ref_dt]
+        if ref_dt
+        else map(parse_note, source_note_paths)
+    )
