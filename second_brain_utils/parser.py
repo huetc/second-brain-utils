@@ -5,7 +5,7 @@ from datetime import datetime
 
 import yaml
 
-PROPERTY_SECTION_DELIMITER = "---\n"
+from second_brain_utils.obsidian_constants import PROPERTY_SECTION_DELIMITER
 
 DT_FORMAT = "%Y-%m-%dT%H:%M:%S"
 ALTERNATE_DT_FORMAT = "%Y-%m-%d %H:%M"

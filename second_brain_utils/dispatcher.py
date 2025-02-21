@@ -3,7 +3,7 @@ from pathlib import Path
 
 import yaml
 
-from second_brain_utils.parser import PROPERTY_SECTION_DELIMITER
+from second_brain_utils.obsidian_constants import PROPERTY_SECTION_DELIMITER
 
 
 def split_notes_by_branch(notes: list) -> dict[str, list]:
