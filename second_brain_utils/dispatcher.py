@@ -1,9 +1,7 @@
 import os.path
 from pathlib import Path
 
-import yaml
-
-from second_brain_utils.obsidian_constants import PROPERTY_SECTION_DELIMITER
+from second_brain_utils.exporter import export_notes
 
 
 def split_notes_by_branch(notes: list) -> dict[str, list]:
@@ -23,14 +21,5 @@ def dispatch_notes_by_branch(notes_by_branch: dict[str, list], target_dispatch_d
 
     # Dispatch and transfer the notes in the branch directories
     for branch, notes in notes_by_branch.items():
-        # Create the branch directory
-        Path(os.path.join(target_dispatch_dir, branch)).mkdir(parents=True, exist_ok=True)
-
         # Dump all notes associated to this branch
-        for note in notes:
-            with open(os.path.join(target_dispatch_dir, branch, note["filename"]), mode="w") as note_file:
-                # Dumping the properties first, correctly delimited
-                note_file.write(PROPERTY_SECTION_DELIMITER)
-                yaml.dump(data=note["properties"], stream=note_file, sort_keys=False, indent=2, allow_unicode=True)
-                note_file.write(PROPERTY_SECTION_DELIMITER)
-                note_file.writelines(note["content"])
+        export_notes(notes, os.path.join(target_dispatch_dir, branch))
