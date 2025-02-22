@@ -22,6 +22,7 @@ dependencies = [
 [project.scripts]
 dispatch-notes = "second_brain_utils.main:run_dispatch_notes"
 export-notes = "second_brain_utils.main:run_export_notes"
+export-unique-tags = "second_brain_utils.main:run_export_unique_tags"
 
 [project.urls]
 #Homepage = "https://huetc.github.io/second-brain-utils/"

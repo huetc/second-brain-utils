@@ -39,3 +39,16 @@ def export_notes(
                 note_file.writelines(content_with_links.split(TMP_LINE_DELIMITER))
             else:
                 note_file.writelines(note["content"])
+
+
+def export_unique_tags(
+    notes: list,
+    target_path: str,
+) -> None:
+    all_tags = []
+
+    for note in notes:
+        all_tags.extend(note["properties"].get("tags") or [])
+
+    with open(target_path, mode="w") as out_f:
+        out_f.writelines("\n".join(sorted(set(all_tags))))

@@ -1,8 +1,9 @@
+import os.path
 import sys
 
 from second_brain_utils.config import JobConfig
 from second_brain_utils.dispatcher import dispatch_notes_by_branch, split_notes_by_branch
-from second_brain_utils.exporter import export_notes
+from second_brain_utils.exporter import export_notes, export_unique_tags
 from second_brain_utils.parser import retrieve_source_notes
 from second_brain_utils.privacy_checker import get_obfuscated_notes
 
@@ -60,6 +61,19 @@ def run_export_notes():
         render_md_links=config.export_render_md_links,
         pop_properties=config.export_pop_properties,
     )
+
+
+def run_export_unique_tags():
+    config = JobConfig()
+
+    source_directory = config.source_directory
+    target_dir = config.target_directory
+
+    # Parse and retrieve all source notes
+    notes = retrieve_source_notes(source_directory=source_directory)
+
+    # Export the unique tags across all notes
+    export_unique_tags(notes=notes, target_path=os.path.join(target_dir, "tags.txt"))
 
 
 if __name__ == "__main__":
