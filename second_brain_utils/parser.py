@@ -43,5 +43,5 @@ def retrieve_source_notes(source_directory: str, ref_dt: datetime | None = None)
     return (
         [parse_note(path) for path in source_note_paths if datetime.fromtimestamp(os.path.getmtime(path)) > ref_dt]
         if ref_dt
-        else map(parse_note, source_note_paths)
+        else list(map(parse_note, source_note_paths))
     )
