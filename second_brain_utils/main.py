@@ -54,6 +54,20 @@ def run_export_notes():
         private_section_filler=config.private_ref_filler,
     )
 
+    if config.keep_tags:
+        public_notes_with_mask = [
+            note
+            for note in public_notes_with_mask
+            if set(note["properties"].get("tags") or []).intersection(config.keep_tags)
+        ]
+
+    if config.drop_tags:
+        public_notes_with_mask = [
+            note
+            for note in public_notes_with_mask
+            if not set(note["properties"].get("tags") or []).intersection(config.drop_tags)
+        ]
+
     # Export the notes
     export_notes(
         notes=public_notes_with_mask,

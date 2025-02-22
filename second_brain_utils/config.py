@@ -22,6 +22,8 @@ class JobConfig(BaseSettings):
     # These options are currently only passed for the export command
     export_render_md_links: bool = True
     export_pop_properties: list[str] | None = None
+    keep_tags: list[str] | None = None
+    drop_tags: list[str] | None = None
 
     model_config = SettingsConfigDict(yaml_file=os.getenv("SECOND_BRAIN_UTILS_PARSER_CONF", "config/example.yaml"))
 
